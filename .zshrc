@@ -9,8 +9,10 @@ stty -ixon
 alias ls="ls -G"
 export LSCOLORS="exfxcxdxbxegedabagacad"
 
-alias ezsh='vim ~/.zshrc'
-alias szsh='source ~/.zshrc'
+source "$HOME/.exports"
+source "$HOME/.functions"
+source "$HOME/.aliases"
+
 alias etmux='vim ~/.tmux.conf'
 alias evim='vim ~/.vimrc'
 alias search='grep -rnw'

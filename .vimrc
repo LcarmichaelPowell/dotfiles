@@ -58,7 +58,7 @@ let g:toggle_terminal#command = 'powershell'
 
 :imap jj <Esc>
 "enter paste mode
-set pastetoggle=<F3>
+set pastetoggle=<C-P>
 " Put your own customizations below 
 
 " tabstop:          Width of tab character
@@ -109,13 +109,6 @@ endif
 " Highlights all text passed the column limit (85)
 nnoremap <leader>1 :call ToggleH()<CR>
 
-" Create mappings for searching only in current pkg/Definition etc.. 
-map <leader>ag :AGid -p .<CR><CR>  " Searches the word under cursor only in current package
-map <leader>agd :AGid -D <CR><CR> " Searches for the definition under cursor 
-map <leader>aga :AGid<CR><CR> " Searches for the word under cursor in all packages
-map <leader>agt :AGid -t 'c t'<CR><CR> " Searches the word under cursor onl in tac files only.
-map <leader>agp :AGid -t 'p'<CR><CR> "Searches the word in the package name you provide
-  
 " Disable Arrow keys until I can stop being an idiot
 " Disable Arrow keys in Normal mode
 map <up> <nop>

@@ -1,0 +1,2 @@
+alias ezsh='vim ~/.zshrc'
+alias szsh='source ~/.zshrc'
