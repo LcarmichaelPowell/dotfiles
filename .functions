@@ -46,7 +46,7 @@ _play_completions() {
   _dir_completions "$PATH_TO_PLAYGROUND"
 }
 
-complete -F _play_completions play
+compdef _play_completions play
 
 # Create a new project and cd into it, does NOT check if project already exists
 project () {
@@ -81,7 +81,7 @@ _project_completions() {
   _dir_completions "$PATH_TO_PROJECTS"
 }
 
-complete -F _project_completions project
+compdef _project_completions project
 
 journal() {
   curdir=$( pwd )
@@ -94,7 +94,21 @@ _journal_completions() {
   _dir_completions "$PATH_TO_JOURNAL"
 }
 
-complete -F _journal_completions journal
+compdef _journal_completions journal
+
+
+function gdbcore() {
+   if [ $# -eq 0 ]
+   then
+      core=$(ls -Art /var/core| tail -n 1)
+   else
+      core=$1
+   fi
+
+   CMD="sudo gdb python --core=/var/core/$core"
+   $CMD
+}
+
 
 # This should be the last line of the file
 # For local changes
