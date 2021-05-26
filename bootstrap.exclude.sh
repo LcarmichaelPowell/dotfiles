@@ -14,15 +14,20 @@ init () {
 	mkdir -p "$PATH_TO_PLAYGROUND"
 	echo_with_prompt "Making a Playground folder in $PATH_TO_JOURNAL if it doesn't already exist"
 	mkdir -p "$PATH_TO_JOURNAL"
+   mkdir -p "$HOME/.config/"
 }
 
 # TODO : Delete symlinks to deleted files
 # Is this where rsync shines?
 # TODO - add support for -f and --force
 link () {
-  for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|\.gitmodules|.*.md' ) ; do
+  for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|\.gitmodules|.*.md|\.config' ) ; do
     # Silently ignore errors here because the files may already exist
     ln -sv "$PWD/$file" "$HOME" || true
+  done
+  for file in $( ls -A .config | grep -vE '\.exclude*|\.git$|\.gitignore|\.gitmodules|.*.md|\.config' ) ; do
+    # Silently ignore errors here because the files may already exist
+    ln -sv "$PWD/.config/$file" "$HOME/.config" || true
   done
 }
 

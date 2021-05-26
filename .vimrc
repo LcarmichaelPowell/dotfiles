@@ -78,13 +78,14 @@ set foldmethod=indent
 set foldlevel=42
 set relativenumber number
 set noshowcmd
-:set termwinsize=0x100
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 
 syntax on
+" Use new regular expression engine
+set re=0
 
 :match ErrorMsg '\%>85v.\+'
 let s:activatedh = 1 
@@ -138,6 +139,7 @@ Plug 'pakutoma/toggle-terminal'
 " Syntax handling
 Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dense-analysis/ale'
 
 " System navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }

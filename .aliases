@@ -33,3 +33,4 @@ alias mattInvest='a matt show tests -s investigating | less'
 alias html='cd ~/public_html'
 alias wsdiff='adiff'
 alias ls="ls -G"
+alias proj="cd ~/projects/"

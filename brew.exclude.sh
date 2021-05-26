@@ -30,6 +30,10 @@ xcode-select --install
 # Core Utils
 brew install coreutils
 
+brew install nvim
+
+brew install kitty
+
 
 # ---------------------------------------------
 # Programming Languages and Frameworks
