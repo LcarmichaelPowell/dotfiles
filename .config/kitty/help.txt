@@ -1,0 +1,9 @@
+All themes are taken from the repo https://github.com/dexpota/kitty-themes
+
+To add a theme replace the existing .theme.conf with the new theme
+
+e.g
+
+in this dir
+
+cp kitty-themes/themes/Floraverse.conf theme.conf

@@ -16,6 +16,8 @@ export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 export LSCOLORS="exfxcxdxbxegedabagacad"
 export VISUAL=/usr/bin/vim
 
+launchctl setenv KITTY_CONFIG_DIRECTORY $HOME/.config/kitty/
+
 # This should be the last line of the file
 # For local changes
 # Don't make edits below this
