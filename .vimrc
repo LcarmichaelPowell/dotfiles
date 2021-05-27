@@ -138,7 +138,7 @@ Plug 'pakutoma/toggle-terminal'
 
 " Syntax handling
 Plug 'octol/vim-cpp-enhanced-highlight'
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 
 " System navigation
@@ -229,3 +229,4 @@ set grepformat^=%f:%l:%c:%m
 set noshowmode  " to get rid of thing like --INSERT--
 set noshowcmd  " to get rid of display of last command
 set shortmess+=F  " to get rid of the file name displayed in the command line bar"
+

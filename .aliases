@@ -34,3 +34,5 @@ alias html='cd ~/public_html'
 alias wsdiff='adiff'
 alias ls="ls -G"
 alias proj="cd ~/projects/"
+alias vim="nvim"
+alias vi="nvim"
