@@ -7,3 +7,11 @@ e.g
 in this dir
 
 cp kitty-themes/themes/Floraverse.conf theme.conf
+
+
+or open a new kitty instance with
+kitty -o allow_remote_control=yes -o enabled_layouts=tall
+ 
+and then test the new themes with 
+
+kitty @ set-colors -a "~/.config/kitty/kitty-themes/themes/AdventureTime.conf"

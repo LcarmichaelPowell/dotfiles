@@ -79,6 +79,15 @@ set foldlevel=42
 set relativenumber number
 set noshowcmd
 
+" Ripgrep/fzf stuff
+set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --follow
+let g:rg_derive_root='true'
+
+nnoremap \ :Rg<CR>
+nnoremap <Leader>b :Buffers<cr>
+nnoremap <Leader>s :BLines<cr>
+
+
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
@@ -145,8 +154,7 @@ Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'kevinhwang91/rnvimr'
 
 " Session tracking
 Plug 'tpope/vim-obsession'
@@ -186,9 +194,6 @@ let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#formatter = 'short_path'
-
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-i> :NERDTreeFind<CR>
 
 
 " easy escape"

@@ -24,7 +24,7 @@ brew upgrade
 xcode-select --install
 
 # ---------------------------------------------
-# Basic Utilities
+# Utilities
 # ---------------------------------------------
 
 # Core Utils
@@ -34,6 +34,17 @@ brew install nvim
 
 brew install kitty
 
+brew install ripgrep
+
+brew install ranger
+
+# ---------------------------------------------
+# fzfj
+# ---------------------------------------------
+brew install fzf
+
+# To install useful key bindings and fuzzy completion:
+$(brew --prefix)/opt/fzf/install
 
 # ---------------------------------------------
 # Programming Languages and Frameworks
