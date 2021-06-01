@@ -149,6 +149,7 @@ Plug 'pakutoma/toggle-terminal'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
+Plug 'leafgarland/typescript-vim'
 
 " System navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
