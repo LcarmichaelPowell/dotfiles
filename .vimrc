@@ -19,6 +19,11 @@ filetype plugin indent on    " required
    source /etc/vimrc
 :endif
 
+" Include Arista-specific settings
+:if filereadable( $VIM . "/vimfiles/arista.vim" )
+   source $VIM/vimfiles/arista.vim
+:endif
+
 if filereadable("cscope.out")
    silent exe "cs add /src/cscope.out"
 endif
@@ -32,6 +37,10 @@ xnoremap p pgvy
 
 
 "nnoremap * *<C-O>:%s///gn<CR>
+
+
+" remap Leader to Space/Space no longer moves cursor
+let mapleader = "\<Space>" 
 
 "hl search stuff
 set hlsearch
@@ -47,6 +56,112 @@ map g# <Plug>(incsearch-nohl-g#)
 map <F5> :buffers<CR>
 map <F1> :bprev<CR>
 map <F2> :bnext<CR>
+
+" I don't like cw, map things to leader instead
+" I have no clue what leader h is mapped to so unmap it all
+nnoremap <Leader>= <C-w>=
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
+
+ " Maps Alt-[h,j,k,l] to resizing a window split
+ " These stupid symbols are because vim doesn't seem to understand the alt
+ " key on OSX.  This is what alt - { hjkl } output respectivly.  If it's not
+ " working go into vim insert mode and see what characters are output
+ map <silent> ˙ <C-w><
+ map <silent> ∆ <C-W>-
+ map <silent> ˚ <C-W>+
+ map <silent> ¬ <C-w>>
+ map <silent> ≠ <C-w>=
+
+" Bring up list of buffer numbers
+nnoremap <Leader>b :buffers<CR>
+
+" Open list and edit
+nnoremap <Leader>w :buffers<CR>:e#
+
+" Open list and split
+nnoremap <Leader>s :buffers<CR>:sb
+
+" Open list and vsplit
+nnoremap <Leader>v :buffers<CR>:vert sb
+
+" Open current buffer in new tab
+nnoremap <Leader>z :tabe %<CR>
+
+" swap between header/source files
+nnoremap <Leader>t :call SwapFile( "primaryExt" )<CR>
+nnoremap <Leader>y :call SwapFile( "secondaryExt" )<CR>
+
+:let curExtList = ['tin',  'tac',   'itin']
+:let primaryExtTargets = { 'tin' : 'tac',
+                         \ 'tac' : 'tin', 
+                         \ 'itin' : 'tac', }
+
+:let secondaryExtTargets = { 'tin' : 'itin',
+                           \ 'tac' : 'itin',
+                           \ 'itin' : 'tin' }
+
+:let extSwapReqs = [ "primaryExt", "secondaryExt" ]
+
+fu! GetTargetExt( curExt, requestIdx )
+   :let targetExt = ""
+   if a:requestIdx == 0
+      if has_key(g:primaryExtTargets, a:curExt ) > 0
+         let targetExt = g:primaryExtTargets[ a:curExt ]
+      endif
+   elseif a:requestIdx == 1
+      if has_key(g:secondaryExtTargets, a:curExt ) > 0
+         let targetExt = g:secondaryExtTargets[ a:curExt ]
+      endif
+   else
+      echom "No ext swap instructions for request type"
+   endif
+
+   if targetExt == ""
+      echom "No ext target for " . curExt
+      echo "Request: " . g:extSwapReqs[ requestIdx ]
+   endif
+
+   return targetExt
+endfunction
+
+fu! SwapFile( request )
+   let curPath = expand('%:p:h') . '/'
+   let curRootFileName = expand('%:t:r')
+   let curExt = expand('%:e')
+   let curFileFullPath = expand('%:p')
+
+   " Different request will modify these attrs
+   " Set them in case the specifc request does not change part
+   " of the file
+   let newRootFileName = curRootFileName
+   let newPath = curPath
+   let newExt = curExt
+
+   if index(g:extSwapReqs, a:request) >= 0
+      let newExt = GetTargetExt( expand('%:e'), index(g:extSwapReqs, a:request) )
+      if newExt == ""
+         echom "I DON'T KNOW WHAT TO DO WITH THIS EXTENSION!"
+         return
+      endif
+   else
+      echom "I DON'T KNOW WHAT TO DO WITH THIS REQUEST!"
+      echo a:request
+   endif
+
+   let newFileFullPath = newPath . newRootFileName . "." . newExt 
+   echom newFileFullPath
+
+   if filereadable(newFileFullPath)
+      execute 'e'newFileFullPath
+   else
+      echom "Cannot find target file: " . newFileFullPath
+      echom "Current File:" . curFileFullPath
+   endif
+endfunction
+
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
@@ -58,7 +173,7 @@ let g:toggle_terminal#command = 'powershell'
 
 :imap jj <Esc>
 "enter paste mode
-set pastetoggle=<C-P>
+set pastetoggle=<F3>
 " Put your own customizations below 
 
 " tabstop:          Width of tab character
@@ -78,23 +193,13 @@ set foldmethod=indent
 set foldlevel=42
 set relativenumber number
 set noshowcmd
-
-" Ripgrep/fzf stuff
-set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --follow
-let g:rg_derive_root='true'
-
-nnoremap \ :Rg<CR>
-nnoremap <Leader>b :Buffers<cr>
-nnoremap <Leader>s :BLines<cr>
-
+:set termwinsize=0x100
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
 autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 
 syntax on
-" Use new regular expression engine
-set re=0
 
 :match ErrorMsg '\%>85v.\+'
 let s:activatedh = 1 
@@ -119,6 +224,20 @@ endif
 " Highlights all text passed the column limit (85)
 nnoremap <leader>1 :call ToggleH()<CR>
 
+" Create mappings for searching only in current pkg/Definition etc.. 
+let LID_File="/src/ID"
+
+"Searches the word under cursor only in current package
+map <leader>ag :AGid -p .<CR><CR>  
+"Searches for the definition under cursor
+map <leader>agd :AGid -D <CR><CR>  
+"Searches for the word under cursor in all packages
+map <leader>aga :AGid<CR><CR> 
+"Searches the word under cursor only in tac files only
+map <leader>agt :AGid -t 'c t'<CR><CR> 
+"Searches the word in the package name you provide
+map <leader>agp :AGid -t 'p'<CR><CR> 
+ 
 " Disable Arrow keys until I can stop being an idiot
 " Disable Arrow keys in Normal mode
 map <up> <nop>
@@ -141,33 +260,35 @@ call plug#end()
 Plug 'joshdick/onedark.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'airblade/vim-gitgutter'
 Plug 'majutsushi/tagbar'
 Plug 'pakutoma/toggle-terminal'
 
 " Syntax handling
 Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'dense-analysis/ale'
-Plug 'leafgarland/typescript-vim'
+Plug 'sheerun/vim-polyglot', { 'branch': 'master', 'do': 'git rebase master arista && git checkout arista' }
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Arista Specific Syntax
+Plug 'https://gitlab.aristanetworks.com/jlerner/grokfromvim'
+Plug 'https://gitlab.aristanetworks.com/vim-scripts/mts.vim'
+Plug 'https://gitlab.aristanetworks.com/vim-scripts/bug.vim', { 'branch': 'master', 'do': 'git rebase master local && git checkout local' }
 
 " System navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'kevinhwang91/rnvimr'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Session tracking
 Plug 'tpope/vim-obsession'
 
 " Utility
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'szw/vim-maximizer'
 Plug 'inkarkat/vim-ingo-library'
-Plug 'jiangmiao/auto-pairs'
 Plug 'haya14busa/incsearch.vim'
 Plug 'zhou13/vim-easyescape'
 
@@ -196,6 +317,17 @@ let g:airline#extensions#tabline#show_tab_count = 0
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#formatter = 'short_path'
 
+"
+"nnoremap <C-t> :NERDTreeToggle<CR>
+"nnoremap <C-i> :NERDTreeFind<CR>
+
+set splitbelow
+set splitright
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " easy escape"
 let g:easyescape_chars = { "j": 1, "k": 1  }
@@ -236,3 +368,6 @@ set noshowmode  " to get rid of thing like --INSERT--
 set noshowcmd  " to get rid of display of last command
 set shortmess+=F  " to get rid of the file name displayed in the command line bar"
 
+
+
+let g:AutoPairsShortcutToggle = '<Ctrl-p>'
