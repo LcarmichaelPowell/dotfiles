@@ -20,6 +20,24 @@ export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
 
 launchctl setenv KITTY_CONFIG_DIRECTORY $HOME/.config/kitty/
 
+
+export EDITOR=/usr/bin/vim
+export VISUAL=/usr/bin/vim
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# nix configuration
+if [[ $- == *i* ]]; then  # check if interactive shell
+   if [ -x "$HOME/bin/nix-enter" ]; then
+      if [ ! -e /nix/var/nix/profiles ] || [ -z ${NIX_ENTER+x} ]; then
+         export NIX_ENTER=""
+         exec "$HOME/bin/nix-enter"
+      fi
+   fi
+fi
+
 # This should be the last line of the file
 # For local changes
 # Don't make edits below this

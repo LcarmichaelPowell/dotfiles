@@ -96,20 +96,6 @@ _journal_completions() {
 
 compdef _journal_completions journal
 
-
-function gdbcore() {
-   if [ $# -eq 0 ]
-   then
-      core=$(ls -Art /var/core| tail -n 1)
-   else
-      core=$1
-   fi
-
-   CMD="sudo gdb python --core=/var/core/$core"
-   $CMD
-}
-
-
 # This should be the last line of the file
 # For local changes
 # Don't make edits below this

@@ -12,30 +12,14 @@ stty -ixon
 alias ls="ls -G"
 export LSCOLORS="exfxcxdxbxegedabagacad"
 
-alias ebash='vim ~/.bashrc'
-alias sbash='source ~/.bashrc'
-alias etmux='vim ~/.tmux.conf'
-alias evim='vim ~/.vimrc'
-alias search='grep -rnw'
-alias searchc='grep -rni'
-alias searchg='grep -rn'
 alias getpackage='a4 project branchpackage'
-alias ffind='find . -iname'
-alias wlog='watch -n 1 cat'
 alias rback='rm -rf /var/shmem/bld/Backup/backups/*'
-alias lblds='Abuildd -l | grep lcarmichaelpowell'
 alias pjdiff='a pj diff | less'
 alias pdiff='pjdiff'
 alias wsdiffv='a ws diff -v'
 alias pjdiffv='a pj diff -v'
-alias getlog='ap abuild -l -p .'
-alias con='a4c shell'
-alias sjobs='jobs -ps'
 alias summary='a4 diff --summary'
-alias jkill='kill -9 `jobs -ps`'
 alias lscore='ls -l /var/core/'
-alias killsjobs='sudo kill -9 `sjobs`'
-alias hSpace='tmux select-layout even-horizontal'
 alias mattRejected='a matt show tests -s rejected | less'
 alias mattPassed='a matt show tests -s passed | less'
 alias mattStarted='a matt show tests -s started | less'
@@ -43,7 +27,6 @@ alias mattApproved='a matt show tests -s approved | less'
 alias mattIdle='a matt show tests -s idle'
 alias mattOverride='a matt show tests -s overridden | less'
 alias mattInvest='a matt show tests -s investigating | less'
-alias html='cd ~/public_html'
 alias wsdiff='adiff'
 alias pb='curl -F c=@- pb'
 alias rgtacc="rg -g '!test' "
@@ -69,33 +52,6 @@ function findTicket() {
    a dut pb -r $1 | grep -i ticket
 }
 
-function svim() {
-   if [ $# -eq 0 ]
-   then
-      echo "Enter a File"
-      return 0;
-   fi
-   CMD="vim /$1" 
-   $CMD
-}
-
-function srun() {
-   if [ $# -eq 0 ]
-   then
-      echo "Enter a Script Name"
-      return 0;
-   fi
-   scriptNameFullPath="~/randomScripts/$1" 
-   scriptArgs=${@:2}
-   CMD="python $scriptNameFullPath $scriptArgs"
-   $CMD
-}
-
-function esrc() {
-   CMD="vim /src/$1"
-   $CMD
-}
-
 function gdbcore() {
    if [ $# -eq 0 ]
    then
@@ -108,10 +64,6 @@ function gdbcore() {
    $CMD
 }
 
-function findInSrc(){
-   find . -type f -exec grep $1 /dev/null {} +
-}
-
 function creamSummary(){ 
    cat /var/memtrack/$1.cream | grep "cpp" | sed 's/.*\/\([^ ]*\.cpp\).*| [0-9\.]* [0-9\.]* \([0-9]*\).*$/\2 \1/' | sort -n -k1
 }
@@ -119,7 +71,6 @@ function creamSummary(){
 function adiff() {
       P4DIFF="git --no-pager diff --color=always --no-index " a4 diff~ "$@" | less -R
 }
-
 
 function sleepShell() {
    sleep 2
@@ -161,13 +112,6 @@ function newWindow(){
    $CMD
 }
 
-function fixSize(){
-   tmux resize-pane -t 1 -x 94
-   tmux resize-pane -t 2 -x 94
-   tmux resize-pane -t 4 -x 94
-   tmux resize-pane -t 3 -y 30
-}
-
 function pullTrace(){
    
    if [ $# -ne 2 ]
@@ -202,6 +146,7 @@ function creamBld(){
    sleep 1
    $CMD
 }
+
 function tt(){
    TITLE=$*;
    export PROMPT_COMMAND='echo -ne "\033]0;$TITLE\007"'
@@ -264,11 +209,6 @@ function createFlame() {
    $CMD
 }
 
-ballard() {
-   clear;
-   start=false; curl http://menu2.danahospitality.ca/BALLARD/menu.asp 2> /dev/null | sed '/^[[:space:]]*$/d' | sed -e 's/<span class="ItemName">/\n\n/g' | sed -e 's/<span class="MenuSection">/\n\n>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<\n/g' | sed -e 's/<[^>]*>/ /g' | while read line; do if [[ $line == *"CDATA"* ]]; then break; fi; if [[ $line == *"Daily"* ]]; then start=true; continue; fi; if [ "$start" = true ]; then if [[ $line == ">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<" ]]; then echo -e "$(tput setaf 4)$line$(tput setaf 2)$(tput smul)"; echo ; else echo "$line$(tput sgr0)"; fi; fi; done | cat -s
-}
-
 function branched(){
    packageString=''
    packages=$(echo $(a pj setting) | awk -F"memberPackages" '{print $2}' | awk -F"[" '{print $2}' | awk -F"]" '{print $1}') 
@@ -286,24 +226,4 @@ function branched(){
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
-
-export EDITOR=/usr/bin/vim
-export VISUAL=/usr/bin/vim
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# nix configuration
-if [[ $- == *i* ]]; then  # check if interactive shell
-   if [ -x "$HOME/bin/nix-enter" ]; then
-      if [ ! -e /nix/var/nix/profiles ] || [ -z ${NIX_ENTER+x} ]; then
-         export NIX_ENTER=""
-         exec "$HOME/bin/nix-enter"
-      fi
-   fi
-fi
-
-
-
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
