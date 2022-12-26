@@ -19,8 +19,25 @@ filetype plugin indent on    " required
    source /etc/vimrc
 :endif
 
+" Include Arista-specific settings
+:if filereadable( $VIM . "/vimfiles/arista.vim" )
+   source $VIM/vimfiles/arista.vim
+:endif
+
+if filereadable("cscope.out")
+   silent exe "cs add /src/cscope.out"
+endif
+
+if filereadable("py_cscope.out")
+   silent exe "cs add /src/py_cscope.out"
+endif
+"
 " Don't yank after paste
 xnoremap p pgvy
+
+
+"nnoremap * *<C-O>:%s///gn<CR>
+
 
 " remap Leader to Space/Space no longer moves cursor
 let mapleader = "\<Space>" 
@@ -62,13 +79,13 @@ nnoremap <Leader>l <C-w>l
 nnoremap <Leader>b :buffers<CR>
 
 " Open list and edit
-nnoremap <Leader>w :buffers<CR>:e#
+nnoremap <Leader>w :buffers<CR>:b 
 
 " Open list and split
-nnoremap <Leader>s :buffers<CR>:sb
+nnoremap <Leader>s :buffers<CR>:sb 
 
 " Open list and vsplit
-nnoremap <Leader>v :buffers<CR>:vert sb
+nnoremap <Leader>v :buffers<CR>:vert sb 
 
 " Open current buffer in new tab
 nnoremap <Leader>z :tabe %<CR>
@@ -176,7 +193,7 @@ set foldmethod=indent
 set foldlevel=42
 set relativenumber number
 set noshowcmd
-" :set termwinsize=0x100
+:set termwinsize=0x100
 
 " In the quickfix window, <CR> is used to jump to the error under the
 " cursor, so undefine the mapping there.
@@ -196,12 +213,31 @@ function! ToggleH()
    endif
 endfunction
 
+if filereadable("cscope.out")
+   silent exe "cs add /src/cscope.out"
+endif
+
+if filereadable("py_cscope.out")
+   silent exe "cs add /src/py_cscope.out"
+endif
+
 " Highlights all text passed the column limit (85)
 nnoremap <leader>1 :call ToggleH()<CR>
 
 " Create mappings for searching only in current pkg/Definition etc.. 
 let LID_File="/src/ID"
 
+"Searches the word under cursor only in current package
+map <leader>ag :AGid -p .<CR><CR>  
+"Searches for the definition under cursor
+map <leader>agd :AGid -D <CR><CR>  
+"Searches for the word under cursor in all packages
+map <leader>aga :AGid<CR><CR> 
+"Searches the word under cursor only in tac files only
+map <leader>agt :AGid -t 'c t'<CR><CR> 
+"Searches the word in the package name you provide
+map <leader>agp :AGid -t 'p'<CR><CR> 
+ 
 " Disable Arrow keys until I can stop being an idiot
 " Disable Arrow keys in Normal mode
 map <up> <nop>
@@ -331,5 +367,7 @@ set grepformat^=%f:%l:%c:%m
 set noshowmode  " to get rid of thing like --INSERT--
 set noshowcmd  " to get rid of display of last command
 set shortmess+=F  " to get rid of the file name displayed in the command line bar"
+
+
 
 let g:AutoPairsShortcutToggle = '<Ctrl-p>'
